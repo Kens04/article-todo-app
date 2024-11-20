@@ -1,12 +1,14 @@
-import { createSystem, defaultConfig } from "@chakra-ui/react"
+"use client";
 
-export const system = createSystem(defaultConfig, {
-  theme: {
-    tokens: {
-      fonts: {
-        heading: { value: `'Figtree', sans-serif` },
-        body: { value: `'Figtree', sans-serif` },
+import { Button, createTheme } from "@mantine/core";
+
+export const theme = createTheme({
+  components: {
+    Button: Button.extend({
+      defaultProps: {
+        color: "cyan",
+        variant: "outline",
       },
-    },
+    }),
   },
 })
