@@ -12,3 +12,57 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  todo Todo[]
+  sharedTodos SharedTodo[]
+  category Category[]
+  @@map("user")
+}
+
+model Todo {
+  id Int @id @default(autoincrement())
+  userId Int @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title String
+  url String
+  text String? @db.Text
+  categories Category[]
+  state String @default("未読")
+  date DateTime
+  isPublic Boolean @default(false) @map("is_public")
+  sharedWith SharedTodo[]
+
+  @@index([userId])
+  @@map("todo")
+}
+
+model SharedTodo {
+  id Int @id @default(autoincrement())
+  todoId Int @map("todo_id")
+  userId Int @map("user_id")
+  sharedAt DateTime @default(now()) @map("shared_at")
+  todo Todo @relation(fields: [todoId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([todoId, userId])
+  @@index([userId])
+  @@index([todoId])
+  @@map("shared_todo")
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String
+  userId Int @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  todo Todo[]
+
+  @@index([userId])
+  @@map("category")
+}
