@@ -1,8 +1,5 @@
-import Theme from "@/components/theme";
+import MainSection from "@/components/layout/top/main-section";
 
 export default function Home() {
-
-  return (
-    <Theme />
-  );
+  return <MainSection />;
 }
