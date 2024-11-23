@@ -38,13 +38,13 @@ const TOPHeader = ({ children }: { children: React.ReactNode }) => {
         <Navbar.Section className="ml-auto hidden lg:flex">
           <div className="flex items-center gap-x-2">
             <Link
-              className={buttonStyles({ intent: "primary" })}
+              className={`${buttonStyles({ intent: "primary" })} py-1 h-auto`}
               href="/register"
             >
               新規登録
             </Link>
             <Link
-              className={buttonStyles({ intent: "secondary" })}
+              className={`${buttonStyles({ intent: "secondary" })} py-1 h-auto`}
               href="/login"
             >
               ログイン
@@ -97,13 +97,13 @@ const TOPHeader = ({ children }: { children: React.ReactNode }) => {
         <Navbar.Flex>
           <Navbar.Flex>
             <Link
-              className={buttonStyles({ intent: "primary" })}
+              className={`${buttonStyles({ intent: "primary" })} text-sm py-1 h-auto`}
               href="/register"
             >
               新規登録
             </Link>
             <Link
-              className={buttonStyles({ intent: "secondary" })}
+              className={`${buttonStyles({ intent: "secondary" })} text-sm py-1 h-auto`}
               href="/login"
             >
               ログイン
