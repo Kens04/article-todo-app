@@ -98,6 +98,7 @@ interface ButtonProps extends ButtonPrimitiveProps {
   size?: "medium" | "large" | "square-petite" | "extra-small" | "small"
   shape?: "square" | "circle"
   appearance?: "solid" | "outline" | "plain"
+  onClick?:  () => void
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(

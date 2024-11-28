@@ -5,6 +5,7 @@ import React from "react"
 import { tv, type VariantProps } from "tailwind-variants"
 
 import { VisuallyHidden } from "./visually-hidden"
+import Image from "next/image"
 
 const avatarGroupStyles = tv({
   base: "flex items-center justify-center -space-x-2 [&_[data-slot=avatar]]:ring-2 [&_[data-slot=avatar]]:ring-bg"
@@ -55,6 +56,8 @@ interface AvatarProps
   alt?: string
   status?: Status
   className?: string
+  width?: number
+  height?: number
 }
 
 const Avatar = ({
@@ -66,6 +69,8 @@ const Avatar = ({
   className,
   shape,
   size,
+  width,
+  height,
   ...props
 }: AvatarProps) => {
   const badgeId = React.useId()
@@ -96,7 +101,7 @@ const Avatar = ({
           </text>
         </svg>
       )}
-      {src && <img src={src} alt={alt} />}
+      {src && <Image src={src} alt={alt} width={width} height={height} />}
       {status && <AvatarBadge size={size} status={status} aria-label={status} />}
     </span>
   )

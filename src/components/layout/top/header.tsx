@@ -2,14 +2,20 @@
 
 import Theme from "@/components/theme";
 import {
+  createClientComponentClient,
+  Session,
+} from "@supabase/auth-helpers-nextjs";
+import {
   IconBook,
   IconChevronLgDown,
   IconDashboard,
   IconLogout,
   IconSettings,
 } from "justd-icons";
+import { useRouter } from "next/navigation";
 import {
   Avatar,
+  Button,
   buttonStyles,
   Container,
   Heading,
@@ -19,7 +25,21 @@ import {
   Separator,
 } from "ui";
 
-const TOPHeader = ({ children }: { children: React.ReactNode }) => {
+interface HeaderProps {
+  children?: React.ReactNode;
+  session: Session | null;
+}
+
+const TOPHeader = ({ children, session }: HeaderProps) => {
+  const supabase = createClientComponentClient();
+  const router = useRouter();
+  const user = session?.user;
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.refresh();
+  };
+
   return (
     <Navbar>
       <Navbar.Nav>
@@ -36,58 +56,74 @@ const TOPHeader = ({ children }: { children: React.ReactNode }) => {
           <Navbar.Item href="#">iPhone</Navbar.Item>
         </Navbar.Section>
         <Navbar.Section className="ml-auto hidden lg:flex">
+          {session ? null : (
+            <>
+              <Link
+                className={`${buttonStyles({ intent: "primary" })} py-1 h-auto`}
+                href="/register"
+              >
+                新規登録
+              </Link>
+              <Link
+                className={`${buttonStyles({
+                  intent: "secondary",
+                })} py-1 h-auto`}
+                href="/login"
+              >
+                ログイン
+              </Link>
+            </>
+          )}
           <div className="flex items-center gap-x-2">
-            <Link
-              className={`${buttonStyles({ intent: "primary" })} py-1 h-auto`}
-              href="/register"
-            >
-              新規登録
-            </Link>
-            <Link
-              className={`${buttonStyles({ intent: "secondary" })} py-1 h-auto`}
-              href="/login"
-            >
-              ログイン
-            </Link>
             <Theme />
           </div>
           <Separator orientation="vertical" className="h-6 ml-1 mr-3" />
-          <Menu>
-            <Menu.Trigger
-              aria-label="Open Menu"
-              className="group gap-x-2 flex items-center"
-            >
-              <Avatar
-                alt="アイコン"
-                size="small"
-                shape="circle"
-                src="/default.png"
-                className="outline-0"
-              />
-              <IconChevronLgDown className="size-4 group-pressed:rotate-180 transition-transform" />
-            </Menu.Trigger>
-            <Menu.Content placement="bottom" showArrow className="sm:min-w-56">
-              <Menu.Section>
-                <Menu.Header separator>
-                  <span className="block">名前</span>
-                </Menu.Header>
-              </Menu.Section>
+          {session ? (
+            <Menu>
+              <Menu.Trigger
+                aria-label="Open Menu"
+                className="group gap-x-2 flex items-center"
+              >
+                <Avatar
+                  alt={user?.user_metadata.name}
+                  size="small"
+                  shape="circle"
+                  src={user ? user?.user_metadata.avatar_url : "/default.png"}
+                  width={32}
+                  height={32}
+                  className="outline-0"
+                />
+                <IconChevronLgDown className="size-4 group-pressed:rotate-180 transition-transform" />
+              </Menu.Trigger>
+              <Menu.Content
+                placement="bottom"
+                showArrow
+                className="sm:min-w-56"
+              >
+                <Menu.Section>
+                  <Menu.Header separator>
+                    <span className="block">{user?.user_metadata.name}</span>
+                  </Menu.Header>
+                </Menu.Section>
 
-              <Menu.Item href="#dashboard">
-                <IconDashboard />
-                ダッシュボード
-              </Menu.Item>
-              <Menu.Item href="#settings">
-                <IconSettings />
-                設定
-              </Menu.Item>
-              <Menu.Separator />
-              <Menu.Item href="#logout">
-                <IconLogout />
-                ログアウト
-              </Menu.Item>
-            </Menu.Content>
-          </Menu>
+                <Menu.Item href="#dashboard">
+                  <IconDashboard />
+                  ダッシュボード
+                </Menu.Item>
+                <Menu.Item href="#settings">
+                  <IconSettings />
+                  設定
+                </Menu.Item>
+                <Menu.Separator />
+                <Menu.Item className="bg-transparent hover:bg-transparent active:bg-transparent cursor-auto">
+                  <Button intent="primary" onClick={handleLogout} className="w-full">
+                    <IconLogout />
+                    ログアウト
+                  </Button>
+                </Menu.Item>
+              </Menu.Content>
+            </Menu>
+          ) : null}
         </Navbar.Section>
       </Navbar.Nav>
       <Navbar.Compact>
@@ -96,63 +132,78 @@ const TOPHeader = ({ children }: { children: React.ReactNode }) => {
         </Navbar.Flex>
         <Navbar.Flex>
           <Navbar.Flex>
-            <Link
-              className={`${buttonStyles({ intent: "primary" })} text-sm py-1 h-auto`}
-              href="/register"
-            >
-              新規登録
-            </Link>
-            <Link
-              className={`${buttonStyles({ intent: "secondary" })} text-sm py-1 h-auto`}
-              href="/login"
-            >
-              ログイン
-            </Link>
+            {session ? null : (
+              <>
+                <Link
+                  className={`${buttonStyles({
+                    intent: "primary",
+                  })} py-1 h-auto`}
+                  href="/register"
+                >
+                  新規登録
+                </Link>
+                <Link
+                  className={`${buttonStyles({
+                    intent: "secondary",
+                  })} py-1 h-auto`}
+                  href="/login"
+                >
+                  ログイン
+                </Link>
+              </>
+            )}
           </Navbar.Flex>
-          <Menu>
-            <Menu.Trigger
-              aria-label="Open Menu"
-              className="group gap-x-2 flex items-center"
-            >
-              <Avatar
-                alt="アイコン"
-                size="small"
-                shape="circle"
-                src="/default.png"
-                className="outline-0"
-              />
-              <IconChevronLgDown className="size-4 group-pressed:rotate-180 transition-transform" />
-            </Menu.Trigger>
-            <Menu.Content placement="bottom" showArrow className="sm:min-w-56">
-              <Menu.Section>
-                <Menu.Header separator>
-                  <span className="block">名前</span>
-                </Menu.Header>
-              </Menu.Section>
+          {session ? (
+            <Menu>
+              <Menu.Trigger
+                aria-label="Open Menu"
+                className="group gap-x-2 flex items-center"
+              >
+                <Avatar
+                  alt={user?.user_metadata.name}
+                  size="small"
+                  shape="circle"
+                  src={user ? user?.user_metadata.avatar_url : "/default.png"}
+                  width={32}
+                  height={32}
+                  className="outline-0"
+                />
+                <IconChevronLgDown className="size-4 group-pressed:rotate-180 transition-transform" />
+              </Menu.Trigger>
+              <Menu.Content
+                placement="bottom"
+                showArrow
+                className="sm:min-w-56"
+              >
+                <Menu.Section>
+                  <Menu.Header separator>
+                    <span className="block">{user?.user_metadata.name}</span>
+                  </Menu.Header>
+                </Menu.Section>
 
-              <Menu.Item href="#dashboard">
-                <IconDashboard />
-                ダッシュボード
-              </Menu.Item>
-              <Menu.Item href="#settings">
-                <IconSettings />
-                設定
-              </Menu.Item>
-              <Menu.Separator />
-              <Menu.Item href="#logout">
-                <IconLogout />
-                ログアウト
-              </Menu.Item>
-            </Menu.Content>
-          </Menu>
+                <Menu.Item href="#dashboard">
+                  <IconDashboard />
+                  ダッシュボード
+                </Menu.Item>
+                <Menu.Item href="#settings">
+                  <IconSettings />
+                  設定
+                </Menu.Item>
+                <Menu.Separator />
+                <Menu.Item className="bg-transparent hover:bg-transparent active:bg-transparent cursor-auto">
+                  <Button intent="primary" onClick={handleLogout} className="w-full">
+                    <IconLogout />
+                    ログアウト
+                  </Button>
+                </Menu.Item>
+              </Menu.Content>
+            </Menu>
+          ) : null}
         </Navbar.Flex>
       </Navbar.Compact>
       <Navbar.Inset>
         <Container className="sm:py-12 py-6">
-          <Heading>
-            {children}
-            {/* <MainSection /> */}
-          </Heading>
+          <Heading>{children}</Heading>
         </Container>
       </Navbar.Inset>
     </Navbar>

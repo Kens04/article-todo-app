@@ -1,16 +1,17 @@
 -- CreateTable
 CREATE TABLE "user" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "avatarUrl" TEXT,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "todo" (
-    "id" SERIAL NOT NULL,
-    "user_id" INTEGER NOT NULL,
+    "id" UUID NOT NULL,
+    "user_id" UUID NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
@@ -25,9 +26,9 @@ CREATE TABLE "todo" (
 
 -- CreateTable
 CREATE TABLE "shared_todo" (
-    "id" SERIAL NOT NULL,
-    "todo_id" INTEGER NOT NULL,
-    "user_id" INTEGER NOT NULL,
+    "id" UUID NOT NULL,
+    "todo_id" UUID NOT NULL,
+    "user_id" UUID NOT NULL,
     "shared_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "shared_todo_pkey" PRIMARY KEY ("id")
@@ -35,17 +36,17 @@ CREATE TABLE "shared_todo" (
 
 -- CreateTable
 CREATE TABLE "category" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
-    "user_id" INTEGER NOT NULL,
+    "user_id" UUID NOT NULL,
 
     CONSTRAINT "category_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "_CategoryToTodo" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
 );
 
 -- CreateIndex
