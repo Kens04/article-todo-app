@@ -16,8 +16,18 @@ import {
   IconStar,
 } from "justd-icons";
 import { Sidebar, Avatar, Button, Link, Menu } from "ui";
+import { Session } from "@supabase/auth-helpers-nextjs";
+import { useAuth } from "@/components/hooks/useAuth";
 
-export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+interface sidebarProps {
+  session?: Session | null;
+  props?: React.ComponentProps<typeof Sidebar>;
+}
+
+export function AppSidebar({ session, props }: sidebarProps) {
+  const { handleLogout } = useAuth();
+  const user = session?.user;
+
   return (
     <Sidebar {...props}>
       <Sidebar.Header>
@@ -71,9 +81,17 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
             data-slot="menu-trigger"
             className="group"
           >
-            <Avatar size="small" shape="circle" src="/default_icon.png" />
+            <Avatar
+              alt={user?.user_metadata.name}
+              size="small"
+              shape="circle"
+              src={user ? user?.user_metadata.avatar_url : "/default.png"}
+              width={32}
+              height={32}
+              className="outline-0"
+            />
             <span className="group-data-[collapsible=dock]:hidden flex items-center justify-center">
-              name
+              {user?.user_metadata.name}
               <IconChevronLgDown className="right-3 size-4 absolute group-pressed:rotate-180 transition-transform" />
             </span>
           </Button>
@@ -87,9 +105,15 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
               設定
             </Menu.Item>
             <Menu.Separator />
-            <Menu.Item href="#">
-              <IconLogout />
-              ログアウト
+            <Menu.Item className="bg-transparent hover:bg-transparent active:bg-transparent cursor-auto">
+              <Button
+                intent="primary"
+                onClick={handleLogout}
+                className="w-full"
+              >
+                <IconLogout />
+                ログアウト
+              </Button>
             </Menu.Item>
           </Menu.Content>
         </Menu>

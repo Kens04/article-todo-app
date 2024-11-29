@@ -36,7 +36,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 aria-label="Profile"
                 className="flex items-center gap-x-2 group"
               >
-                <Avatar size="small" shape="circle" src="/default_icon.png" />
+                <Avatar size="small" shape="circle" src="/default_icon.png" width={32}
+                  height={32} alt="ユーザー" />
                 <IconChevronLgDown className="size-4 group-pressed:rotate-180 transition-transform" />
               </Menu.Trigger>
               <Menu.Content className="min-w-[--trigger-width]">

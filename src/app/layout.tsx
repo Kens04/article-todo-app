@@ -3,8 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import TOPHeader from "@/components/layout/top/header";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { useSession } from "@/components/hooks/useSession";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,16 +26,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = createServerComponentClient({ cookies });
-  const { data: user } = await supabase.auth.getSession();
-  const session = user.session;
+  const session = await useSession();
+
   return (
     <html lang="ja">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <TOPHeader session={session}>{children}</TOPHeader>
+          <TOPHeader session={session} >
+          {children}
+          </TOPHeader>
         </Providers>
       </body>
     </html>
