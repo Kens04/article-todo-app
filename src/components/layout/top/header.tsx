@@ -1,5 +1,7 @@
 "use client";
 
+import { useAuth } from "@/components/hooks/useAuth";
+import MainSection from "@/components/layout/top/main-section";
 import Theme from "@/components/theme";
 import {
   createClientComponentClient,
@@ -26,19 +28,13 @@ import {
 } from "ui";
 
 interface HeaderProps {
-  children?: React.ReactNode;
+  children: React.ReactNode;
   session: Session | null;
 }
 
-const TOPHeader = ({ children, session }: HeaderProps) => {
-  const supabase = createClientComponentClient();
-  const router = useRouter();
+const TOPHeader = ({ session, children }: HeaderProps) => {
+  const { handleLogout } = useAuth();
   const user = session?.user;
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.refresh();
-  };
 
   return (
     <Navbar>
@@ -106,7 +102,7 @@ const TOPHeader = ({ children, session }: HeaderProps) => {
                   </Menu.Header>
                 </Menu.Section>
 
-                <Menu.Item href="#dashboard">
+                <Menu.Item href="/dashboard">
                   <IconDashboard />
                   ダッシュボード
                 </Menu.Item>
@@ -116,7 +112,11 @@ const TOPHeader = ({ children, session }: HeaderProps) => {
                 </Menu.Item>
                 <Menu.Separator />
                 <Menu.Item className="bg-transparent hover:bg-transparent active:bg-transparent cursor-auto">
-                  <Button intent="primary" onClick={handleLogout} className="w-full">
+                  <Button
+                    intent="primary"
+                    onClick={handleLogout}
+                    className="w-full"
+                  >
                     <IconLogout />
                     ログアウト
                   </Button>
@@ -191,7 +191,11 @@ const TOPHeader = ({ children, session }: HeaderProps) => {
                 </Menu.Item>
                 <Menu.Separator />
                 <Menu.Item className="bg-transparent hover:bg-transparent active:bg-transparent cursor-auto">
-                  <Button intent="primary" onClick={handleLogout} className="w-full">
+                  <Button
+                    intent="primary"
+                    onClick={handleLogout}
+                    className="w-full"
+                  >
                     <IconLogout />
                     ログアウト
                   </Button>
@@ -203,7 +207,9 @@ const TOPHeader = ({ children, session }: HeaderProps) => {
       </Navbar.Compact>
       <Navbar.Inset>
         <Container className="sm:py-12 py-6">
-          <Heading>{children}</Heading>
+          <Heading>
+            {children}
+          </Heading>
         </Container>
       </Navbar.Inset>
     </Navbar>

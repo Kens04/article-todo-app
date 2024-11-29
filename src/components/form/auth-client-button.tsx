@@ -2,14 +2,12 @@
 
 import { Button } from "@/components/ui";
 import {
-  createClientComponentClient,
-  Session,
+  createClientComponentClient
 } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
+import { IconBrandGoogle } from "justd-icons";
 
-const AuthClientButton = ({ session }: { session: Session | null }) => {
+const AuthClientButton = () => {
   const supabase = createClientComponentClient();
-  const router = useRouter();
 
   const handleLogin = async () => {
     await supabase.auth.signInWithOAuth({
@@ -20,22 +18,15 @@ const AuthClientButton = ({ session }: { session: Session | null }) => {
     });
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.refresh();
-  };
-
   return (
     <>
-      {session ? (
-        <Button onClick={handleLogout} className="w-full">
-          ログアウト
-        </Button>
-      ) : (
-        <Button onClick={handleLogin} className="w-full">
-          ログイン
-        </Button>
-      )}
+    <Button className="w-full">
+      ログイン
+    </Button>
+    <Button intent="secondary" onClick={handleLogin} className="w-full">
+      <IconBrandGoogle />
+      Googleでログイン
+    </Button>
     </>
   );
 };
