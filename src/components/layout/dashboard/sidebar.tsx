@@ -8,6 +8,7 @@ import {
   IconChevronLgDown,
   IconCircleCheck,
   IconCirclePerson,
+  IconCirclePlus,
   IconDashboard,
   IconLogout,
   IconPeople,
@@ -47,8 +48,15 @@ export function AppSidebar({ session, props }: sidebarProps) {
             ダッシュボード
           </Sidebar.Item>
           <Sidebar.Item
+            icon={IconCirclePlus}
+            href="/dashboard/create-todo"
+            badge={35}
+          >
+            TODO作成
+          </Sidebar.Item>
+          <Sidebar.Item
             icon={IconCircleCheck}
-            href="/dashboard/todo"
+            href="/dashboard/todo-list"
             badge={35}
           >
             TODOリスト

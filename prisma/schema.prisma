@@ -18,52 +18,16 @@ model User {
   name String
   email String @unique
   avatarUrl String?
-  todo Todo[]
-  sharedTodos SharedTodo[]
-  category Category[]
   @@map("user")
 }
 
 model Todo {
   id String @id @default(uuid()) @db.Uuid
-  userId String @map("user_id") @db.Uuid
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   title String
   url String
   text String? @db.Text
-  categories Category[]
   state String @default("未読")
   date DateTime
-  isPublic Boolean @default(false) @map("is_public")
-  sharedWith SharedTodo[]
-
-  @@index([userId])
   @@map("todo")
 }
 
-model SharedTodo {
-  id String @id @default(uuid()) @db.Uuid
-  todoId String @map("todo_id") @db.Uuid
-  userId String @map("user_id") @db.Uuid
-  sharedAt DateTime @default(now()) @map("shared_at")
-  todo Todo @relation(fields: [todoId], references: [id], onDelete: Cascade)
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([todoId, userId])
-  @@index([userId])
-  @@index([todoId])
-  @@map("shared_todo")
-}
-
-model Category {
-  id String @id @default(uuid()) @db.Uuid
-  name String
-  userId String @map("user_id") @db.Uuid
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  todo Todo[]
-
-  @@index([userId])
-  @@map("category")
-}
